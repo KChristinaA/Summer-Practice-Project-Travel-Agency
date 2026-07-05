@@ -13,7 +13,7 @@ import ru.itis.summerpractice.tudasyudaproject.model.ProfileScreen
 fun AppRoot(navHostController: NavHostController) {
     NavHost(
         navController = navHostController,
-        startDestination = MainScreen
+        startDestination = AuthScreen
     ) {
 
         composable<AuthScreen>{
