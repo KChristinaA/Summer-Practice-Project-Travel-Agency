@@ -31,12 +31,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import ru.itis.summerpractice.tudasyuda.R
 import ru.itis.summerpractice.tudasyudaproject.model.CityScreen
 import ru.itis.summerpractice.tudasyudaproject.model.ProfileScreen
 import ru.itis.summerpractice.tudasyudaproject.repository.Cities
@@ -50,7 +52,7 @@ fun MainScreen(navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "ТУДА-СЮДА", fontSize = TextUnit(24f, TextUnitType.Sp), fontWeight = FontWeight.Bold) },
+                title = { Text(text = stringResource(R.string.app_name_in_russian_uppercase), fontSize = TextUnit(24f, TextUnitType.Sp), fontWeight = FontWeight.Bold) },
                 navigationIcon = {},
                 actions = {},
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -61,14 +63,14 @@ fun MainScreen(navController: NavController) {
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Главная") },
-                    label = { Text("Главная") },
+                    icon = { Icon(Icons.Default.Home, contentDescription = stringResource(R.string.main_screen_title)) },
+                    label = { Text(text = stringResource(R.string.main_screen_title)) },
                     selected = selectedScreen == 0,
                     onClick = { selectedScreen = 0 }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Профиль") },
-                    label = { Text("Профиль") },
+                    icon = { Icon(Icons.Default.Person, contentDescription = stringResource(R.string.profile_screen_title)) },
+                    label = { Text(text = stringResource(R.string.profile_screen_title)) },
                     selected = selectedScreen == 1,
                     onClick = { selectedScreen = 1
                     navController.navigate(ProfileScreen)
