@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Tuda Syuda Project</string>
+    <string name="app_name_in_russian_uppercase">ТУДА-СЮДА</string>
+    <string name="main_screen_title">Главная</string>
+    <string name="profile_screen_title">Профиль</string>
 </resources>
