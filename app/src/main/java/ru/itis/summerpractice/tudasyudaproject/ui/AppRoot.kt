@@ -37,6 +37,10 @@ fun AppRoot(navHostController: NavHostController) {
         }
 
         composable<CityScreen>{
+            CityScreen(onBackClick = {
+                CurrentData.clearSelectedCity()
+                navHostController.navigate(MainScreen)
+            })
         }
 
         composable<ProfileScreen>{
