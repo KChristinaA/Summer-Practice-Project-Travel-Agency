@@ -1,3 +1,5 @@
+package ru.itis.summerpractice.tudasyudaproject.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,7 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import ru.itis.summerpractice.tudasyudaproject.CurrentData
 import ru.itis.summerpractice.tudasyudaproject.Person
 import ru.itis.summerpractice.tudasyudaproject.UserDatabase
 
@@ -187,6 +189,7 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                             val users = UserDatabase.getUsers(context)
                             val user = users.find { it.login == login }
                             if (user != null) {
+                                CurrentData.currentUser = user
                                 onLoginSuccess(user)
                             }
                         } else {
