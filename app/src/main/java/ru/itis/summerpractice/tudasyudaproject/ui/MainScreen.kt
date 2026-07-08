@@ -38,8 +38,6 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import ru.itis.summerpractice.tudasyuda.R
-import ru.itis.summerpractice.tudasyudaproject.model.CityScreen
-import ru.itis.summerpractice.tudasyudaproject.model.ProfileScreen
 import ru.itis.summerpractice.tudasyudaproject.repository.Cities
 
 @OptIn(ExperimentalMaterial3Api::class)
