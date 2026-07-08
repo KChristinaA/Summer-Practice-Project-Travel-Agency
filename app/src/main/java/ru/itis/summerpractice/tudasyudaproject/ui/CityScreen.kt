@@ -261,6 +261,35 @@ fun RouteItem(route: Route) {
         if (expanded) {
             Spacer(modifier = Modifier.height(8.dp))
 
-fun CityScreen(navController: NavController) {
-    // TODO: брать из статического класса индекс города?
+            Text(
+                text = route.description,
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Image(
+                painter = painterResource(route.image),
+                contentDescription = route.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(500.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Fit
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Время: ${route.time} ч",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                text = "Протяженность: ${route.length} км",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
 }
