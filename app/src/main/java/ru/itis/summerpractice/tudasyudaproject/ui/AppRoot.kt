@@ -17,7 +17,6 @@ fun AppRoot(navHostController: NavHostController) {
     ) {
 
         composable<AuthScreen>{
-            AuthScreen(navController = navHostController)
         }
 
         composable<MainScreen>{
