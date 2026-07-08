@@ -107,7 +107,7 @@ fun MainScreen(
                                     .padding(vertical = 16.dp)
                                     .border(
                                         width = 2.dp,
-                                        color = Color.Black,
+                                        color = Color(0xFF483D8B),
                                         shape = RoundedCornerShape(4.dp)
                                     )
                                     .padding(4.dp)
