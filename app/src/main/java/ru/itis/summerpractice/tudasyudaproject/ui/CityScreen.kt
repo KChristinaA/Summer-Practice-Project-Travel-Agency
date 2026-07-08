@@ -47,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.itis.summerpractice.tudasyudaproject.CurrentData
 import ru.itis.summerpractice.tudasyudaproject.model.Route
 import ru.itis.summerpractice.tudasyudaproject.repository.Cities
 import ru.itis.summerpractice.tudasyudaproject.repository.CurrentData
