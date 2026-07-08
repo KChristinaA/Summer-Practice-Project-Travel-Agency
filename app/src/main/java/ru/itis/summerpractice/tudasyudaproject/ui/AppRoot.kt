@@ -26,7 +26,6 @@ fun AppRoot(navHostController: NavHostController) {
         }
 
         composable<ProfileScreen>{
-            ProfileScreen(navController = navHostController)
         }
     }
 }
