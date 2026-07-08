@@ -44,6 +44,19 @@ fun AppRoot(navHostController: NavHostController) {
         }
 
         composable<ProfileScreen>{
+            ProfileScreen(
+                onMainClick = {
+                    navHostController.navigate(MainScreen)
+                },
+                onRouteClick = { cityIndexOfRoute ->
+                    CurrentData.selectCity(cityIndexOfRoute)
+                    navHostController.navigate(CityScreen)
+                },
+                onExitClick = {
+                    CurrentData.exitFromProfile()
+                    navHostController.navigate(AuthScreen)
+                }
+            )
         }
     }
 }
