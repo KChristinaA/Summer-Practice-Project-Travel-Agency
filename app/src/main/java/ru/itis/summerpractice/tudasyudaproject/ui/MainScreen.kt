@@ -56,7 +56,7 @@ fun MainScreen(
                 navigationIcon = {},
                 actions = {},
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFDCDCDC)
+                    containerColor = Color(0xFFD6CAEA)
                 )
             )
         },
