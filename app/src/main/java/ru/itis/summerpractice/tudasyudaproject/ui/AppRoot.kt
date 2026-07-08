@@ -19,6 +19,10 @@ fun AppRoot(navHostController: NavHostController) {
     ) {
 
         composable<AuthScreen>{
+            AuthScreen(onLoginSuccess = { person ->
+                navHostController.navigate(MainScreen)
+                CurrentData.currentUser = person
+            })
         }
 
         composable<MainScreen>{
