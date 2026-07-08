@@ -75,7 +75,7 @@ fun MainScreen(
                     label = { Text(text = stringResource(R.string.profile_screen_title)) },
                     selected = selectedScreen == 1,
                     onClick = { selectedScreen = 1
-                    navController.navigate(ProfileScreen)
+                        onProfileClick()
                     }
                 )
             }
