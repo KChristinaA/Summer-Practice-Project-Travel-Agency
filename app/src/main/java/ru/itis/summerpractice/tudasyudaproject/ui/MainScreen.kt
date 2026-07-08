@@ -128,7 +128,7 @@ fun MainScreen(
                                     modifier = Modifier.size(150.dp),
                                     contentScale = ContentScale.Crop
                                 )
-                                index++
+                            }
                             }
                         }
                     }
