@@ -112,8 +112,7 @@ fun MainScreen(
                                     )
                                     .padding(4.dp)
                                     .clickable {
-                                        //TODO: передать в статический класс индекс выбранного города?
-                                        navController.navigate(CityScreen)
+                                        onCityClick(index)
                                     },
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
