@@ -20,7 +20,6 @@ fun AppRoot(navHostController: NavHostController) {
         }
 
         composable<MainScreen>{
-            MainScreen(navController = navHostController)
         }
 
         composable<CityScreen>{
