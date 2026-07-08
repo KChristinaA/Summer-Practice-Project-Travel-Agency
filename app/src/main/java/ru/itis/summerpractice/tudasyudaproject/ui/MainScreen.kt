@@ -98,7 +98,9 @@ fun MainScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        repeat(2) {
+                        repeat(2) { column ->
+                            var index = row * 2 + column
+                            if (index < cities.size) {
                             Column(
                                 modifier = Modifier
                                     .padding(horizontal = 8.dp)
