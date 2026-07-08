@@ -101,6 +101,8 @@ fun ProfileScreen(
                     tint = Color(0xFF483D8B)
                 )
 
-fun ProfileScreen(navController: NavController) {
+                Text(text = userName,
+                    fontSize = TextUnit(22f, TextUnitType.Sp),
+                    fontWeight = FontWeight.Bold)
 
 }
