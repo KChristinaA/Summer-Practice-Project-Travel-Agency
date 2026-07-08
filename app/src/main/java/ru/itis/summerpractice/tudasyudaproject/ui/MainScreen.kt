@@ -42,7 +42,10 @@ import ru.itis.summerpractice.tudasyudaproject.repository.Cities
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(
+    onCityClick: (Int) -> Unit,
+    onProfileClick: () -> Unit
+) {
     val cities = Cities.getCities()
     var index = 0
     var selectedScreen by remember { mutableStateOf(0) }
