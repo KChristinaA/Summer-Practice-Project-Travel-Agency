@@ -142,7 +142,6 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                     fontSize = 20.sp
                 )
             }
-
-fun AuthScreen(navController: NavController) {
-
+        }
+    }
 }
