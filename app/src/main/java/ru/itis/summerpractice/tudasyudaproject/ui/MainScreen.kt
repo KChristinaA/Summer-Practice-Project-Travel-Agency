@@ -61,7 +61,9 @@ fun MainScreen(
             )
         },
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = Color(0xFFD6CAEA)
+            ) {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = stringResource(R.string.main_screen_title)) },
                     label = { Text(text = stringResource(R.string.main_screen_title)) },
