@@ -8,5 +8,5 @@ data class CityData (
     val imageUrl: String,
     val population: Long,
     val area: Float,
-    val description: String
+    val description: String = ""
 )
