@@ -10,6 +10,7 @@ import ru.itis.summerpractice.tudasyudaproject.model.CityScreen
 import ru.itis.summerpractice.tudasyudaproject.model.MainScreen
 import ru.itis.summerpractice.tudasyudaproject.model.ProfileScreen
 
+
 @Composable
 fun AppRoot(navHostController: NavHostController) {
     NavHost(
