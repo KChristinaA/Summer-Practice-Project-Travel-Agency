@@ -105,4 +105,65 @@ fun ProfileScreen(
                     fontSize = TextUnit(22f, TextUnitType.Sp),
                     fontWeight = FontWeight.Bold)
 
+                Spacer(modifier = Modifier.padding(16.dp))
+
+                Text(text = "Избранные маршруты:",
+                    fontSize = TextUnit(18f, TextUnitType.Sp),
+                    modifier = Modifier.align(Alignment.Start)
+                        .padding(horizontal = 8.dp),
+                    fontWeight = FontWeight.SemiBold)
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .align(Alignment.CenterHorizontally)
+                        .padding(horizontal = 8.dp)
+                        .padding(vertical = 8.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color(0xFF483D8B),
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .padding(4.dp)
+                ) {
+                    if (favoriteRoutes.isEmpty()) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(176.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Чтобы добавить маршрут в избранное,\nнажмите на кнопку рядом с ним в меню города",
+                                    textAlign = TextAlign.Center,
+                                    fontSize = TextUnit(16f, TextUnitType.Sp),
+                                    color = Color.Gray
+                                )
+                            }
+                        }
+                    } else {
+                        items(count = favoriteRoutes.size) { index ->
+                            Text(text = favoriteRoutes.get(index).name,
+                                fontSize = TextUnit(18f, TextUnitType.Sp),
+                                modifier = Modifier.clickable {
+                                    onRouteClick(favoriteRoutes.get(index).cityIndex)
+                                })
+                            }
+                        }
+                    }
+
+                Spacer(modifier = Modifier.height(64.dp))
+
+                Button(
+                    onClick = {
+                        onExitClick()
+                    }
+                ) {
+                    Text(text = "Выйти из профиля")
+                }
+            }
+        }
+    }
 }
