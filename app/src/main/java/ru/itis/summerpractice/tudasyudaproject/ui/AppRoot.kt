@@ -23,7 +23,6 @@ fun AppRoot(navHostController: NavHostController) {
         }
 
         composable<CityScreen>{
-            CityScreen(navController = navHostController)
         }
 
         composable<ProfileScreen>{
