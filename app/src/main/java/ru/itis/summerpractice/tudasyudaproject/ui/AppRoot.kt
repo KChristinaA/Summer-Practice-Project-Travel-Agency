@@ -4,10 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import ru.itis.summerpractice.tudasyudaproject.CurrentData
 import ru.itis.summerpractice.tudasyudaproject.model.AuthScreen
 import ru.itis.summerpractice.tudasyudaproject.model.CityScreen
 import ru.itis.summerpractice.tudasyudaproject.model.MainScreen
 import ru.itis.summerpractice.tudasyudaproject.model.ProfileScreen
+
 
 @Composable
 fun AppRoot(navHostController: NavHostController) {
@@ -17,19 +19,44 @@ fun AppRoot(navHostController: NavHostController) {
     ) {
 
         composable<AuthScreen>{
-            AuthScreen(navController = navHostController)
+            AuthScreen(onLoginSuccess = { person ->
+                navHostController.navigate(MainScreen)
+                CurrentData.currentUser = person
+            })
         }
 
         composable<MainScreen>{
-            MainScreen(navController = navHostController)
+            MainScreen(
+                onCityClick = { index ->
+                    CurrentData.selectCity(index)
+                    navHostController.navigate(CityScreen)
+                },
+                onProfileClick = {
+                navHostController.navigate(ProfileScreen)
+            })
         }
 
         composable<CityScreen>{
-            CityScreen(navController = navHostController)
+            CityScreen(onBackClick = {
+                CurrentData.clearSelectedCity()
+                navHostController.navigate(MainScreen)
+            })
         }
 
         composable<ProfileScreen>{
-            ProfileScreen(navController = navHostController)
+            ProfileScreen(
+                onMainClick = {
+                    navHostController.navigate(MainScreen)
+                },
+                onRouteClick = { cityIndexOfRoute ->
+                    CurrentData.selectCity(cityIndexOfRoute)
+                    navHostController.navigate(CityScreen)
+                },
+                onExitClick = {
+                    CurrentData.exitFromProfile()
+                    navHostController.navigate(AuthScreen)
+                }
+            )
         }
     }
 }
