@@ -1,5 +1,4 @@
-package ru.itis.summerpractice.tudasyudaproject.ui
-
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,16 +8,20 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,14 +29,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.itis.summerpractice.tudasyudaproject.CurrentData
 import ru.itis.summerpractice.tudasyudaproject.Person
 import ru.itis.summerpractice.tudasyudaproject.UserDatabase
 
@@ -49,42 +52,49 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var successMessage by remember { mutableStateOf<String?>(null) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Spacer(
-            modifier = Modifier
-                .size(350.dp)
-                .clip(CircleShape)
-                .background(Color(0xFF9370DB).copy(alpha = 0.5f))
-                .align(Alignment.TopStart)
-                .offset(x = (-60).dp, y = (-60).dp)
-        )
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFf9f5fd))) {
 
-        Spacer(
-            modifier = Modifier
-                .size(300.dp)
-                .clip(CircleShape)
-                .background(Color(0xFF9400D3).copy(alpha = 0.5f))
-                .align(Alignment.BottomEnd)
-                .offset(x = (-60).dp, y = (-60).dp)
-        )
+        Canvas(modifier = Modifier.fillMaxSize()) {
 
-        Spacer(
-            modifier = Modifier
-                .size(250.dp)
-                .clip(CircleShape)
-                .background(Color(0xFF6A5ACD).copy(alpha = 0.4f))
-                .align(Alignment.TopStart)
-                .offset(x = (500).dp, y = (-500).dp)
-        )
+            if (!isRegister) {
+                drawCircle(
+                    color = Color(0xFF9370DB).copy(alpha = 0.4f),
+                    radius = 250.dp.toPx(),
+                    center = Offset(
+                        x = 0.dp.toPx(),
+                        y = 100.dp.toPx()
+                    )
+                )
 
-        Spacer(
-            modifier = Modifier
-                .size(150.dp)
-                .clip(CircleShape)
-                .background(Color(0xFF4B0082).copy(alpha = 0.4f))
-                .align(Alignment.BottomEnd)
-                .offset(x = (-50).dp, y = 50.dp)
-        )
+                drawCircle(
+                    color = Color(0xFFbb78f2).copy(alpha = 0.4f),
+                    radius = 125.dp.toPx(),
+                    center = Offset(
+                        x = 150.dp.toPx(),
+                        y = 250.dp.toPx()
+                    )
+                )
+            } else {
+                drawCircle(
+                    color = Color(0xFF9370DB).copy(alpha = 0.5f),
+                    radius = 250.dp.toPx(),
+                    center = Offset(
+                        x = 450.dp.toPx(),
+                        y = 30.dp.toPx()
+                    )
+                )
+
+                drawCircle(
+                    color = Color(0xFFbb78f2).copy(alpha = 0.4f),
+                    radius = 125.dp.toPx(),
+                    center = Offset(
+                        x = 300.dp.toPx(),
+                        y = 165.dp.toPx()
+                    )
+                )
+            }
+
+        }
 
         Column(
             modifier = Modifier
@@ -92,22 +102,51 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                 .fillMaxHeight()
                 .padding(24.dp)
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top
         ) {
+            Spacer(modifier = Modifier.height(250.dp))
+
+            Text(
+                text = if (isRegister) "Регистрация" else "Вход",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF390a62)
+            )
+            Spacer(modifier = Modifier.height(3.dp))
+
+            Text(
+                text = if (isRegister) "Создайте новый аккаунт" else "Добро пожаловать!",
+                fontSize = 20.sp,
+                color = Color(0xFF6e6289)
+            )
+
             Spacer(modifier = Modifier.height(32.dp))
 
-            TextField(
+            OutlinedTextField(
                 value = login,
                 onValueChange = { login = it; errorMessage = null; successMessage = null },
-                placeholder = { Text("Логин", fontSize = 24.sp) },
-                textStyle = TextStyle(fontSize = 24.sp, color = Color.Black),
-                modifier = Modifier.fillMaxWidth()
+                placeholder = { Text("Логин", fontSize = 18.sp) },
+                textStyle = TextStyle(fontSize = 18.sp, color = Color.Black),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xffebd9f6),
+                    unfocusedContainerColor = Color(0xfff3e8f9),
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Логин"
+                    )
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            TextField(
+            OutlinedTextField(
                 value = password,
                 onValueChange = {
                     password = it
@@ -120,10 +159,23 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                         }
                     }
                 },
-                placeholder = { Text("Пароль", fontSize = 24.sp) },
-                textStyle = TextStyle(fontSize = 24.sp, color = Color.Black),
+                placeholder = { Text("Пароль", fontSize = 18.sp) },
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                textStyle = TextStyle(fontSize = 18.sp, color = Color.Black),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xffebd9f6),
+                    unfocusedContainerColor = Color(0xfff3e8f9),
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "Пароль"
+                    )
+                }
             )
 
             if (isRegister && passwordStrength != null) {
@@ -140,18 +192,30 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                     fontSize = 20.sp
                 )
             }
-
             if (isRegister) {
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(
+                OutlinedTextField(
                     value = repeatPassword,
                     onValueChange = {
                         repeatPassword = it; errorMessage = null; successMessage = null
                     },
-                    placeholder = { Text("Повторите пароль", fontSize = 24.sp) },
-                    textStyle = TextStyle(fontSize = 24.sp, color = Color.Black),
+                    placeholder = { Text("Повторите пароль", fontSize = 18.sp) },
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth()
+                    textStyle = TextStyle(fontSize = 18.sp, color = Color.Black),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xffebd9f6),
+                        unfocusedContainerColor = Color(0xfff3e8f9),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Повторите пароль"
+                        )
+                    }
                 )
             }
 
@@ -189,7 +253,6 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                             val users = UserDatabase.getUsers(context)
                             val user = users.find { it.login == login }
                             if (user != null) {
-                                CurrentData.currentUser = user
                                 onLoginSuccess(user)
                             }
                         } else {
@@ -198,11 +261,18 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xff903dd2),
+                    Color.White
+                )
             ) {
                 Text(
                     text = if (isRegister) "Зарегистрироваться" else "Войти",
-                    fontSize = 24.sp
+                    fontSize = 20.sp
                 )
             }
 
@@ -219,7 +289,7 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
             ) {
                 Text(
                     text = if (isRegister) "Уже есть аккаунт? Войти" else "Нет аккаунта? Зарегистрироваться",
-                    color = Color(0xFF483D8B),
+                    color = Color(0xffc4abd4),
                     fontSize = 20.sp
                 )
             }

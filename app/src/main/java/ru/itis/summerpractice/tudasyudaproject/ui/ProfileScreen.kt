@@ -11,14 +11,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -41,7 +44,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import ru.itis.summerpractice.tudasyuda.R
 import ru.itis.summerpractice.tudasyudaproject.CurrentData
-import ru.itis.summerpractice.tudasyudaproject.model.Route
+import ru.itis.summerpractice.tudasyudaproject.repository.Favorites
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,10 +52,9 @@ fun ProfileScreen(
     onMainClick: () -> Unit,
     onRouteClick: (Int) -> Unit,
     onExitClick: () -> Unit) {
-    val userName = CurrentData.currentUser?.login ?: "Неавторизованный пользователь"
+    val userName = CurrentData.currentUser?.login ?: stringResource(R.string.username_error)
     var selectedScreen by remember { mutableStateOf(1) }
-    //TODO: вытаскивать список избранного у пользователя
-    var favoriteRoutes by remember { mutableStateOf(emptyList<Route>())}
+    var favoriteRoutes by remember { mutableStateOf(Favorites.getFavoriteRoutes()) }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -73,7 +75,7 @@ fun ProfileScreen(
                     label = { Text(text = stringResource(R.string.main_screen_title)) },
                     selected = selectedScreen == 0,
                     onClick = { selectedScreen = 0
-                    onMainClick()
+                        onMainClick()
                     }
                 )
                 NavigationBarItem(
@@ -107,10 +109,10 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.padding(16.dp))
 
-                Text(text = "Избранные маршруты:",
-                    fontSize = TextUnit(18f, TextUnitType.Sp),
+                Text(text = stringResource(R.string.favorite_routes_title).plus(":"),
+                    fontSize = TextUnit(22f, TextUnitType.Sp),
                     modifier = Modifier.align(Alignment.Start)
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = 12.dp),
                     fontWeight = FontWeight.SemiBold)
 
                 LazyColumn(
@@ -136,7 +138,7 @@ fun ProfileScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "Чтобы добавить маршрут в избранное,\nнажмите на кнопку рядом с ним в меню города",
+                                    text = stringResource(R.string.no_favorite_routes_label),
                                     textAlign = TextAlign.Center,
                                     fontSize = TextUnit(16f, TextUnitType.Sp),
                                     color = Color.Gray
@@ -144,24 +146,46 @@ fun ProfileScreen(
                             }
                         }
                     } else {
-                        items(count = favoriteRoutes.size) { index ->
-                            Text(text = favoriteRoutes.get(index).name,
-                                fontSize = TextUnit(18f, TextUnitType.Sp),
-                                modifier = Modifier.clickable {
-                                    onRouteClick(favoriteRoutes.get(index).indexOfCity)
-                                })
+                        itemsIndexed(favoriteRoutes) { index, route ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onRouteClick(route.cityIndex) }
+                                    .padding(vertical = 12.dp, horizontal = 16.dp)
+                            ) {
+                                Text(
+                                    text = route.name,
+                                    fontSize = TextUnit(
+                                        18f,
+                                        TextUnitType.Sp
+                                    ),
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+
+                            if (index < favoriteRoutes.lastIndex) {
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    thickness = 1.dp,
+                                    color = Color.LightGray
+                                )
                             }
                         }
                     }
+                }
 
                 Spacer(modifier = Modifier.height(64.dp))
 
                 Button(
                     onClick = {
                         onExitClick()
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB61313),
+                        Color.White
+                    )
                 ) {
-                    Text(text = "Выйти из профиля")
+                    Text(text = stringResource(R.string.exit_profile_button))
                 }
             }
         }

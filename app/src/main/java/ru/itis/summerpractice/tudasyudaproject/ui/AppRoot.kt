@@ -1,5 +1,6 @@
 package ru.itis.summerpractice.tudasyudaproject.ui
 
+import AuthScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,8 +33,8 @@ fun AppRoot(navHostController: NavHostController) {
                     navHostController.navigate(CityScreen)
                 },
                 onProfileClick = {
-                navHostController.navigate(ProfileScreen)
-            })
+                    navHostController.navigate(ProfileScreen)
+                })
         }
 
         composable<CityScreen>{

@@ -1,26 +1,27 @@
 package ru.itis.summerpractice.tudasyudaproject.repository
+import android.content.Context
+import ru.itis.summerpractice.tudasyudaproject.CurrentData
+import ru.itis.summerpractice.tudasyudaproject.UserDatabase
 import ru.itis.summerpractice.tudasyudaproject.model.Route
 
 object Favorites {
-    private val favoriteRoutes = mutableSetOf<String>()
-
-    fun switch(routeName: String) {
-        if (favoriteRoutes.contains(routeName)) {
-            favoriteRoutes.remove(routeName)
+    fun switch(context: Context, routeName: String) {
+        if (isFavorite(routeName)) {
+            UserDatabase.removeFavoriteRoute(context, routeName)
         } else {
-            favoriteRoutes.add(routeName)
+            UserDatabase.addFavoriteRoute(context, routeName)
         }
     }
 
     fun isFavorite(routeName: String): Boolean {
-        return favoriteRoutes.contains(routeName)
+        val user = CurrentData.currentUser ?: return false
+        return user.favoriteRoutes.contains(routeName)
     }
 
     fun getFavoriteRoutes(): List<Route> {
-        return Routes.getAllRoutes().filter { favoriteRoutes.contains(it.name) }
+        val user = CurrentData.currentUser ?: return emptyList()
+        val favoriteNames = user.favoriteRoutes
+        return Routes.getAllRoutes().filter { favoriteNames.contains(it.name) }
     }
 
-    fun getAll(): Set<String> {
-        return favoriteRoutes.toSet()
-    }
 }

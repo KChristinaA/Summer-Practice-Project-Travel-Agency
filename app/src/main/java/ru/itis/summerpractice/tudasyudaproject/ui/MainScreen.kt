@@ -100,34 +100,34 @@ fun MainScreen(
                         repeat(2) { column ->
                             var index = row * 2 + column
                             if (index < cities.size) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp)
-                                    .padding(vertical = 16.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = Color(0xFF483D8B),
-                                        shape = RoundedCornerShape(4.dp)
+                                Column(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .padding(vertical = 16.dp)
+                                        .border(
+                                            width = 2.dp,
+                                            color = Color(0xFF483D8B),
+                                            shape = RoundedCornerShape(4.dp)
+                                        )
+                                        .padding(4.dp)
+                                        .clickable {
+                                            onCityClick(index)
+                                        },
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = cities[index].name.uppercase(),
+                                        fontSize = TextUnit(21f, TextUnitType.Sp),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(bottom = 8.dp)
                                     )
-                                    .padding(4.dp)
-                                    .clickable {
-                                        onCityClick(index)
-                                    },
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = cities[index].name.uppercase(),
-                                    fontSize = TextUnit(21f, TextUnitType.Sp),
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
-                                AsyncImage(
-                                    model = cities[index].imageUrl,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(150.dp),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
+                                    AsyncImage(
+                                        model = cities[index].imageUrl,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(150.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
                             }
                         }
                     }
