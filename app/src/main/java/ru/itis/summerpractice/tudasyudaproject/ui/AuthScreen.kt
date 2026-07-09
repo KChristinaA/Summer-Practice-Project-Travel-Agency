@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -143,7 +145,8 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                         imageVector = Icons.Default.Person,
                         contentDescription = "Логин"
                     )
-                }
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -177,7 +180,8 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                         imageVector = Icons.Default.Lock,
                         contentDescription = "Пароль"
                     )
-                }
+                },
+                keyboardOptions = if(isRegister) KeyboardOptions(imeAction = ImeAction.Next) else KeyboardOptions(imeAction = ImeAction.Done)
             )
 
             if (isRegister && passwordStrength != null) {
@@ -218,7 +222,8 @@ fun AuthScreen(onLoginSuccess: (Person) -> Unit) {
                             imageVector = Icons.Default.Lock,
                             contentDescription = "Повторите пароль"
                         )
-                    }
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
             }
 
