@@ -117,7 +117,7 @@ fun MainScreen(
                                 ) {
                                     Text(
                                         text = cities[index].name.uppercase(),
-                                        fontSize = TextUnit(21f, TextUnitType.Sp),
+                                        fontSize = TextUnit(19f, TextUnitType.Sp),
                                         fontWeight = FontWeight.Bold,
                                         modifier = Modifier.padding(bottom = 8.dp)
                                     )
