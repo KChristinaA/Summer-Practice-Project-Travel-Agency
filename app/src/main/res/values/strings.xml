@@ -3,4 +3,10 @@
     <string name="app_name_in_russian_uppercase">ТУДА-СЮДА</string>
     <string name="main_screen_title">Главная</string>
     <string name="profile_screen_title">Профиль</string>
+    <string name="favourite_routes_title">Избранные маршруты</string>
+    <string name="no_favorite_routes_label">Чтобы добавить маршрут в избранное,
+нажмите на кнопку рядом с ним в меню города</string>
+    <string name="username_error">Неавторизованный пользователь</string>
+    <string name="exit_profile_button">Выйти из профиля</string>
+
 </resources>
