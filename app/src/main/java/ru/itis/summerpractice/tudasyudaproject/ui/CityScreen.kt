@@ -1,6 +1,8 @@
 package ru.itis.summerpractice.tudasyudaproject.ui
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,11 +11,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +27,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -33,6 +39,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,9 +47,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,7 +60,6 @@ import androidx.compose.ui.unit.sp
 import ru.itis.summerpractice.tudasyudaproject.CurrentData
 import ru.itis.summerpractice.tudasyudaproject.model.Route
 import ru.itis.summerpractice.tudasyudaproject.repository.Cities
-import ru.itis.summerpractice.tudasyudaproject.repository.CurrentData
 import ru.itis.summerpractice.tudasyudaproject.repository.Favorites
 import ru.itis.summerpractice.tudasyudaproject.repository.Routes
 import ru.itis.summerpractice.tudasyudaproject.utils.ConvertCityIndexToCity
@@ -85,7 +94,9 @@ fun CityScreen(onBackClick: () -> Unit) {
                     if (city != null) {
                         Text(
                             text = city.name.uppercase(),
-                            fontSize = 24.sp
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF390a62)
                         )
                     }
                 },
@@ -93,13 +104,15 @@ fun CityScreen(onBackClick: () -> Unit) {
                     IconButton(onClick = {onBackClick()}) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад"
+                            contentDescription = "Назад",
+                            tint = Color(0xFF390a62)
                         )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color(0xFFDCDCDC))
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color(0xFFf1e8fa))
             )
-        }
+        },
+        containerColor = Color(0xFFf1e8fa)
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -109,88 +122,107 @@ fun CityScreen(onBackClick: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                Text(
-                    text = "Информация о городе",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ){
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Text(
+                            text = "Информация о городе",
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                if (city != null) {
-                    Text(
-                        text = city.description,
-                        fontSize = 18.sp,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
+                        if (city != null) {
+                            Text(
+                                text = city.description,
+                                fontSize = 18.sp,
+                                lineHeight = 22.sp
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        if (city != null) {
+                            Text(
+                                text = "Площадь: ${city.area} км²",
+                                fontSize = 15.sp
+                            )
+                        }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (city != null) {
-                    Text(
-                        text = "Площадь: ${city.area} км²",
-                        fontSize = 15.sp
-                    )
-                }
-
-                if (city != null) {
-                    Text(
-                        text = "Население: ${city.population} чел.",
-                        fontSize = 15.sp
-                    )
-                }
-            }
-
-            item {
-                Box {
-                    OutlinedButton(
-                        onClick = {sortMenu = true},
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Сортировать: ${getSort(sort)}", fontSize = 18.sp)
+                        if (city != null) {
+                            Text(
+                                text = "Население: ${city.population} чел.",
+                                fontSize = 15.sp
+                            )
+                        }
                     }
-
-                    DropdownMenu(
-                        expanded = sortMenu,
-                        onDismissRequest = {sortMenu = false}
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        DropdownMenuItem(
-                            text = { Text("По времени (короткие сначала)", fontSize = 18.sp) },
-                            onClick = {
-                                sort = "time_up"
-                                sortMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("По времени (длинные сначала)", fontSize = 18.sp) },
-                            onClick = {
-                                sort = "time_down"
-                                sortMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("По протяженности (короткие сначала)", fontSize = 18.sp) },
-                            onClick = {
-                                sort = "length_up"
-                                sortMenu = false
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("По протяженности (длинные сначала)", fontSize = 18.sp) },
-                            onClick = {
-                                sort = "length_down"
-                                sortMenu = false
-                            }
-                        )
+                        OutlinedButton(
+                            onClick = {sortMenu = true},
+                            modifier = Modifier.width(350.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            border = BorderStroke(
+                                1.5.dp,
+                                Color(0xFFa380b6)
+                            )
+                        ) {
+                            Text("Сортировать: ${getSort(sort)}", fontSize = 18.sp)
+                        }
+
+                        DropdownMenu(
+                            expanded = sortMenu,
+                            onDismissRequest = {sortMenu = false}
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("По времени (короткие сначала)", fontSize = 18.sp) },
+                                onClick = {
+                                    sort = "time_up"
+                                    sortMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("По времени (длинные сначала)", fontSize = 18.sp) },
+                                onClick = {
+                                    sort = "time_down"
+                                    sortMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("По протяженности (короткие сначала)", fontSize = 18.sp) },
+                                onClick = {
+                                    sort = "length_up"
+                                    sortMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("По протяженности (длинные сначала)", fontSize = 18.sp) },
+                                onClick = {
+                                    sort = "length_down"
+                                    sortMenu = false
+                                }
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    sortedRoutes.forEach { route ->
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            RouteItem(route = route, modifier = Modifier.width(350.dp))
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
-            items(sortedRoutes) { route ->
-                RouteItem(route = route)
-            }
-
             item {
                 Spacer(modifier = Modifier.height(80.dp))
             }
@@ -210,20 +242,19 @@ fun getSort(sort: String): String {
 }
 
 @Composable
-fun RouteItem(route: Route) {
+fun RouteItem(route: Route, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     var isFavorite by remember { mutableStateOf(Favorites.isFavorite(route.name)) }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)
+        modifier = modifier
+            .background(Color(0xfff3e8f9))
             .border(
                 width = 2.dp,
-                color = Color.Black,
+                color = Color(0xffebd9f6),
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(12.dp)
+            .padding(8.dp)
             .animateContentSize()
     ) {
         Row(
@@ -273,7 +304,7 @@ fun RouteItem(route: Route) {
                 contentDescription = route.name,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(500.dp)
+                    .height(400.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Fit
             )
