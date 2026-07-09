@@ -1,6 +1,5 @@
 package ru.itis.summerpractice.tudasyudaproject.ui
 
-import AuthScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
