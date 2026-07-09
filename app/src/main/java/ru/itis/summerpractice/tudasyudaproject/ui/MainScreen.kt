@@ -47,6 +47,7 @@ fun MainScreen(
     onProfileClick: () -> Unit
 ) {
     val cities = Cities.getCities()
+    var index = 0
     var selectedScreen by remember { mutableStateOf(0) }
     Scaffold(
         topBar = {
@@ -89,7 +90,7 @@ fun MainScreen(
                     .padding(vertical = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                repeat(2) { row ->
+                repeat(2) { x ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
