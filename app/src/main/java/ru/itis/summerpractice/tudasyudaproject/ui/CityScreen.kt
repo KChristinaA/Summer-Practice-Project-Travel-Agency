@@ -1,7 +1,327 @@
 package ru.itis.summerpractice.tudasyudaproject.ui
 
-import androidx.navigation.NavController
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import ru.itis.summerpractice.tudasyudaproject.CurrentData
+import ru.itis.summerpractice.tudasyudaproject.model.Route
+import ru.itis.summerpractice.tudasyudaproject.repository.Favorites
+import ru.itis.summerpractice.tudasyudaproject.repository.Routes
+import ru.itis.summerpractice.tudasyudaproject.utils.ConvertCityIndexToCity
 
-fun CityScreen(navController: NavController) {
-    // TODO: брать из статического класса индекс города?
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CityScreen(onBackClick: () -> Unit) {
+    val cityIndex = CurrentData.currentSelectedCity
+    val city = ConvertCityIndexToCity(CurrentData.currentSelectedCity)
+    val allRoutes = Routes.getRoutesForCity(cityIndex)
+    var sort by remember { mutableStateOf("none") }
+    var sortMenu by remember { mutableStateOf(false) }
+    if (city == null) {
+        onBackClick()
+    }
+    val sortedRoutes = remember(sort,allRoutes) {
+        when(sort) {
+            "none" -> allRoutes
+            "time_up" -> allRoutes.sortedBy { it.time }
+            "time_down" -> allRoutes.sortedByDescending { it.time }
+            "length_up" -> allRoutes.sortedBy { it.length }
+            "length_down" -> allRoutes.sortedByDescending { it.length }
+            else -> allRoutes
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    if (city != null) {
+                        Text(
+                            text = city.name.uppercase(),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF390a62)
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = {onBackClick()}) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Назад",
+                            tint = Color(0xFF390a62)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color(0xFFf1e8fa))
+            )
+        },
+        containerColor = Color(0xFFf1e8fa)
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Text(
+                            text = "Информация о городе",
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        if (city != null) {
+                            Text(
+                                text = city.description,
+                                fontSize = 18.sp,
+                                lineHeight = 22.sp
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        if (city != null) {
+                            Text(
+                                text = "Площадь: ${city.area} км²",
+                                fontSize = 15.sp
+                            )
+                        }
+                        if (city != null) {
+                            Text(
+                                text = "Население: ${city.population} чел.",
+                                fontSize = 15.sp
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        OutlinedButton(
+                            onClick = { sortMenu = true },
+                            modifier = Modifier.width(350.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            border = BorderStroke(
+                                1.5.dp,
+                                Color(0xFFa380b6)
+                            )
+                        ) {
+                            Text("Сортировать: ${getSort(sort)}", fontSize = 18.sp)
+                        }
+                        DropdownMenu(
+                            expanded = sortMenu,
+                            onDismissRequest = { sortMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("По времени (короткие сначала)", fontSize = 18.sp) },
+                                onClick = {
+                                    sort = "time_up"
+                                    sortMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("По времени (длинные сначала)", fontSize = 18.sp) },
+                                onClick = {
+                                    sort = "time_down"
+                                    sortMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        "По протяженности (короткие сначала)",
+                                        fontSize = 18.sp
+                                    )
+                                },
+                                onClick = {
+                                    sort = "length_up"
+                                    sortMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        "По протяженности (длинные сначала)",
+                                        fontSize = 18.sp
+                                    )
+                                },
+                                onClick = {
+                                    sort = "length_down"
+                                    sortMenu = false
+                                }
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+
+            items(items = sortedRoutes,
+                key = { route -> route.name }) { route ->
+                RouteItem(route = route, isFavorite = Favorites.isFavorite(route.name))
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(80.dp))
+            }
+        }
+    }
+}
+
+fun getSort(sort: String): String {
+    return when(sort) {
+        "none" -> "без сортировки"
+        "time_up" -> "по времени ↑"
+        "time_down" -> "по времени ↓"
+        "length_up" -> "по протяженности ↑"
+        "length_down" -> "по протяженности ↓"
+        else -> "без сортировки"
+    }
+}
+
+@Composable
+fun RouteItem(route: Route,
+              isFavorite: Boolean) {
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+    var localIsFavorite by remember { mutableStateOf(isFavorite) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .border(
+                width = 2.dp,
+                color = Color.Black,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(12.dp)
+            .animateContentSize()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = route.name,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+
+            IconButton(onClick = {
+                Favorites.switch(context, route.name)
+                localIsFavorite = !localIsFavorite
+            }) {
+                Icon(
+                    imageVector = if (localIsFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = if (localIsFavorite) "Удалить из избранного" else "Добавить в избранное",
+                    tint = if (localIsFavorite) Color.Red else Color.Gray,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+
+            IconButton(onClick = {expanded = !expanded}) {
+                Icon(
+                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = if (expanded) "Свернуть" else "Развернуть",
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        }
+
+        if (expanded) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = route.description,
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Image(
+                painter = painterResource(route.image),
+                contentDescription = route.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(500.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Fit
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Время: ${route.time} ч",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                text = "Протяженность: ${route.length} км",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
 }

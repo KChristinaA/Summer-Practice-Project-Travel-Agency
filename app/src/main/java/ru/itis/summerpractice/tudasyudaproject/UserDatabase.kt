@@ -7,7 +7,8 @@ import com.google.gson.reflect.TypeToken
 
 data class Person(
     val login: String,
-    val password: String
+    val password: String,
+    val favoriteRoutes: List<String> = emptyList()
 )
 
 object UserDatabase {
@@ -26,7 +27,7 @@ object UserDatabase {
         }
     }
 
-    private fun saveUsers(context: Context, users: List<Person>) {
+    fun saveUsers(context: Context, users: List<Person>) {
         val prefs: SharedPreferences =
             context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val json = Gson().toJson(users)
@@ -76,5 +77,29 @@ object UserDatabase {
             3 -> "Средний"
             else -> "Ненадежный"
         }
+    }
+
+    private fun updateUser(context: Context, updatedUser: Person) {
+        val users = getUsers(context)
+        val index = users.indexOfFirst { it.login == updatedUser.login }
+        users[index] = updatedUser
+        saveUsers(context, users)
+        CurrentData.currentUser = updatedUser
+    }
+
+    fun addFavoriteRoute(context: Context, routeName: String) {
+        val user = CurrentData.currentUser ?: return
+        val currentFavorites = user.favoriteRoutes
+        if (currentFavorites.contains(routeName)) return
+        val updatedUser = user.copy(favoriteRoutes = currentFavorites + routeName)
+        updateUser(context, updatedUser)
+    }
+
+    fun removeFavoriteRoute(context: Context, routeName: String) {
+        val user = CurrentData.currentUser ?: return
+        val currentFavorites = user.favoriteRoutes
+        if (!currentFavorites.contains(routeName)) return
+        val updatedUser = user.copy(favoriteRoutes = currentFavorites.filter { it != routeName })
+        updateUser(context, updatedUser)
     }
 }

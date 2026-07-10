@@ -36,18 +36,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import ru.itis.summerpractice.tudasyuda.R
-import ru.itis.summerpractice.tudasyudaproject.model.CityScreen
-import ru.itis.summerpractice.tudasyudaproject.model.ProfileScreen
 import ru.itis.summerpractice.tudasyudaproject.repository.Cities
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(
+    onCityClick: (Int) -> Unit,
+    onProfileClick: () -> Unit
+) {
     val cities = Cities.getCities()
-    var index = 0
     var selectedScreen by remember { mutableStateOf(0) }
     Scaffold(
         topBar = {
@@ -56,12 +55,14 @@ fun MainScreen(navController: NavController) {
                 navigationIcon = {},
                 actions = {},
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFFDCDCDC)
+                    containerColor = Color(0xFFD6CAEA)
                 )
             )
         },
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = Color(0xFFD6CAEA)
+            ) {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = stringResource(R.string.main_screen_title)) },
                     label = { Text(text = stringResource(R.string.main_screen_title)) },
@@ -73,7 +74,7 @@ fun MainScreen(navController: NavController) {
                     label = { Text(text = stringResource(R.string.profile_screen_title)) },
                     selected = selectedScreen == 1,
                     onClick = { selectedScreen = 1
-                    navController.navigate(ProfileScreen)
+                        onProfileClick()
                     }
                 )
             }
@@ -88,7 +89,7 @@ fun MainScreen(navController: NavController) {
                     .padding(vertical = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                repeat(2) { x ->
+                repeat(2) { row ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -96,36 +97,37 @@ fun MainScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        repeat(2) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp)
-                                    .padding(vertical = 16.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = Color.Black,
-                                        shape = RoundedCornerShape(4.dp)
+                        repeat(2) { column ->
+                            var index = row * 2 + column
+                            if (index < cities.size) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .padding(vertical = 16.dp)
+                                        .border(
+                                            width = 2.dp,
+                                            color = Color(0xFF483D8B),
+                                            shape = RoundedCornerShape(4.dp)
+                                        )
+                                        .padding(4.dp)
+                                        .clickable {
+                                            onCityClick(index)
+                                        },
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = cities[index].name.uppercase(),
+                                        fontSize = TextUnit(19f, TextUnitType.Sp),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(bottom = 8.dp)
                                     )
-                                    .padding(4.dp)
-                                    .clickable {
-                                        //TODO: передать в статический класс индекс выбранного города?
-                                        navController.navigate(CityScreen)
-                                    },
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = cities[index].name.uppercase(),
-                                    fontSize = TextUnit(21f, TextUnitType.Sp),
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
-                                AsyncImage(
-                                    model = cities[index].imageUrl,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(150.dp),
-                                    contentScale = ContentScale.Crop
-                                )
-                                index++
+                                    AsyncImage(
+                                        model = cities[index].imageUrl,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(150.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
                             }
                         }
                     }
